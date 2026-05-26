@@ -29,8 +29,9 @@ function randomDelay(min, max) {
 
 // Launch browser and log into Instagram
 async function initBrowser() {
-  browser = await chromium.launch({
- 
+browser = await chromium.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled']
 });
 context = await browser.newContext({
   proxy: {
