@@ -29,11 +29,19 @@ function randomDelay(min, max) {
 
 // Launch browser and log into Instagram
 async function initBrowser() {
-  browser = await chromium.launch({ headless: true, args: ['--no-sandbox'browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'] });
-  context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    viewport: { width: 1280, height: 800 }
-  });
+  browser = await chromium.launch({
+ 
+});
+context = await browser.newContext({
+  proxy: {
+    server: 'http://38.154.203.95:5863',
+    username: 'qnimztp',
+    password: '5wat0kg43lun'
+  },
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  viewport: { width: 1280, height: 800 }
+});
+  
   page = await context.newPage();
 
   console.log('Logging into Instagram...');
