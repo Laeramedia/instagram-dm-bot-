@@ -29,7 +29,7 @@ function randomDelay(min, max) {
 
 // Launch browser and log into Instagram
 async function initBrowser() {
-  browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+  browser = await chromium.launch({ headless: true, args: ['--no-sandbox'browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-blink-features=AutomationControlled'] });
   context = await browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     viewport: { width: 1280, height: 800 }
@@ -39,7 +39,7 @@ async function initBrowser() {
   console.log('Logging into Instagram...');
   await page.goto('https://www.instagram.com/accounts/login/', { waitUntil: 'networkidle' });
   await randomDelay(2000, 4000);
-
+await page.waitForSelector('input[name="username"]', { timeout: 60000 });
   await page.fill('input[name="username"]', IG_USERNAME);
   await randomDelay(500, 1000);
   await page.fill('input[name="password"]', IG_PASSWORD);
