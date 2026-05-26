@@ -5,7 +5,6 @@ const app = express();
 app.use(express.json());
 
 const IG_USERNAME = process.env.IG_USERNAME;
-const IG_PASSWORD = process.env.IG_PASSWORD;
 const DM_MESSAGE = process.env.DM_MESSAGE || "yo can i ask you something about your brand";
 const PORT = process.env.PORT || 3000;
 
@@ -34,10 +33,10 @@ async function initBrowser() {
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     viewport: { width: 1280, height: 800 }
   });
-const rawCookies = process.env.IG_COOKIES 
-  const rawCookies = process.env.IG_COOKIES;
-  if (rawCookies) {
-    const cookieArray = rawCookies.split(';').map(c => {
+
+  const cookies = process.env.IG_COOKIES;
+  if (cookies) {
+    const cookieArray = cookies.split(';').map(c => {
       const [name, ...rest] = c.trim().split('=');
       return { name: name.trim(), value: rest.join('=').trim(), domain: '.instagram.com', path: '/' };
     }).filter(c => c.name);
@@ -71,10 +70,10 @@ async function sendDM(username) {
     await page.keyboard.press('Enter');
     await randomDelay(2000, 3000);
 
-    console.log(`✅ DM sent to @${username}`);
+    console.log(`DM sent to @${username}`);
     return { success: true, username };
   } catch (err) {
-    console.error(`❌ Failed to DM @${username}:`, err.message);
+    console.error(`Failed to DM @${username}:`, err.message);
     return { success: false, error: err.message };
   }
 }
