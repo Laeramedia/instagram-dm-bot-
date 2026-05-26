@@ -109,8 +109,8 @@ app.post('/send-dm', async (req, res) => {
 
   checkDailyReset();
 
-  if (dmCount >= 45) {
-    return res.status(429).json({ error: 'Daily DM limit reached (45). Try again tomorrow.' });
+  if (dmCount >= 70) {
+    return res.status(429).json({ error: 'Daily DM limit reached (70). Try again tomorrow.' });
   }
 
   if (!browser || !browser.isConnected()) {
@@ -125,7 +125,7 @@ app.post('/send-dm', async (req, res) => {
 
   if (result.success) {
     dmCount++;
-    console.log(`DMs sent today: ${dmCount}/45`);
+    console.log(`DMs sent today: ${dmCount}/70`);
   }
 
   res.json({ ...result, dmsSentToday: dmCount });
@@ -137,8 +137,8 @@ app.get('/status', (req, res) => {
   res.json({
     status: 'running',
     dmsSentToday: dmCount,
-    dailyLimit: 45,
-    remaining: 45 - dmCount,
+    dailyLimit: 70,
+    remaining: 70 - dmCount,
     account: IG_USERNAME
   });
 });
