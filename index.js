@@ -35,9 +35,9 @@ browser = await chromium.launch({
 });
 context = await browser.newContext({
   proxy: {
-    server: 'http://38.154.203.95:5863',
-    username: 'qnimztp',
-    password: '5wat0kg43lun'
+    server: 'http://geo.iproyal.com:12321'
+    username: 'c3qOeqSDpcjNgjjL',
+    password: 'Q2XUJCLOB4ErchiM'
   },
   userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   viewport: { width: 1280, height: 800 }
