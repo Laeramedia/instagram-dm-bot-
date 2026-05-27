@@ -49,49 +49,14 @@ async function initBrowser() {
 
 async function sendDM(username) {
   try {
-    console.log(`Navigating to DM: ${username}`);
-    await page.goto(`https://www.instagram.com/direct/new/`, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await randomDelay(2000, 3000);
+    console.log(`Navigating to profile: ${username}`);
+    await page.goto(`https://www.instagram.com/${username}/`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await randomDelay(3000, 5000);
 
-    const searchInput = page.locator('input[placeholder="Search..."]').first();
-    await searchInput.click();
-    await searchInput.type(username, { delay: 100 });
-    await randomDelay(2000, 3000);
+    const messageBtn = page.locator('text=Message').first();
+    const visible = await messageBtn.isVisible({ timeout: 5000 }).catch(() => false);
 
-    const userResult = page.locator(`div[role="button"]:has-text("${username}")`).first();
-    await userResult.click();
-    await randomDelay(1000, 2000);
-
-    const nextBtn = page.locator('div[role="button"]:has-text("Next")').first();
-    await nextBtn.click();
-    await randomDelay(2000, 3000);
-
-    const input = page.locator('div[aria-label="Message"]').first();
-    await input.click();
-    await input.type(DM_MESSAGE, { delay: 50 + Math.random() * 50 });
-    await randomDelay(1000, 2000);
-
-    await page.keyboard.press('Enter');
-    await randomDelay(2000, 3000);
-
-    console.log(`DM sent to @${username}`);
-    return { success: true, username };
-  } catch (err) {
-    console.error(`Failed to DM @${username}:`, err.message);
-    return { success: false, error: err.message };
-  }
-}
-
-    let messageBtn = null;
-    for (const selector of selectors) {
-      const btn = page.locator(selector).first();
-      if (await btn.isVisible({ timeout: 3000 }).catch(() => false)) {
-        messageBtn = btn;
-        break;
-      }
-    }
-
-    if (!messageBtn) {
+    if (!visible) {
       return { success: false, error: 'No Message button found' };
     }
 
@@ -113,7 +78,6 @@ async function sendDM(username) {
     console.error(`Failed to DM @${username}:`, err.message);
     return { success: false, error: err.message };
   }
-}
 }
 
 app.post('/send-dm', async (req, res) => {
