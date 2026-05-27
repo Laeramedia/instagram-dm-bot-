@@ -50,11 +50,27 @@ async function initBrowser() {
 async function sendDM(username) {
   try {
     console.log(`Navigating to profile: ${username}`);
-    await page.goto(`https://www.instagram.com/${username}/`, { waitUntil: 'networkidle' });
-    await randomDelay(2000, 4000);
+    await page.goto(`https://www.instagram.com/${username}/`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await randomDelay(3000, 5000);
 
-    const messageBtn = page.locator('div[role="button"]:has-text("Message"), a[role="button"]:has-text("Message")').first();
-    if (!await messageBtn.isVisible()) {
+    // Try multiple selectors for Message button
+    const selectors = [
+      'div[role="button"]:has-text("Message")',
+      'a[role="button"]:has-text("Message")',
+      'button:has-text("Message")',
+      'div:has-text("Message")[tabindex="0"]'
+    ];
+
+    let messageBtn = null;
+    for (const selector of selectors) {
+      const btn = page.locator(selector).first();
+      if (await btn.isVisible({ timeout: 3000 }).catch(() => false)) {
+        messageBtn = btn;
+        break;
+      }
+    }
+
+    if (!messageBtn) {
       return { success: false, error: 'No Message button found' };
     }
 
@@ -76,6 +92,7 @@ async function sendDM(username) {
     console.error(`Failed to DM @${username}:`, err.message);
     return { success: false, error: err.message };
   }
+}
 }
 
 app.post('/send-dm', async (req, res) => {
