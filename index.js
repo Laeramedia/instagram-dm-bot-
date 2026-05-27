@@ -49,17 +49,38 @@ async function initBrowser() {
 
 async function sendDM(username) {
   try {
-    console.log(`Navigating to profile: ${username}`);
-    await page.goto(`https://www.instagram.com/${username}/`, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await randomDelay(3000, 5000);
+    console.log(`Navigating to DM: ${username}`);
+    await page.goto(`https://www.instagram.com/direct/new/`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await randomDelay(2000, 3000);
 
-    // Try multiple selectors for Message button
-    const selectors = [
-      'div[role="button"]:has-text("Message")',
-      'a[role="button"]:has-text("Message")',
-      'button:has-text("Message")',
-      'div:has-text("Message")[tabindex="0"]'
-    ];
+    const searchInput = page.locator('input[placeholder="Search..."]').first();
+    await searchInput.click();
+    await searchInput.type(username, { delay: 100 });
+    await randomDelay(2000, 3000);
+
+    const userResult = page.locator(`div[role="button"]:has-text("${username}")`).first();
+    await userResult.click();
+    await randomDelay(1000, 2000);
+
+    const nextBtn = page.locator('div[role="button"]:has-text("Next")').first();
+    await nextBtn.click();
+    await randomDelay(2000, 3000);
+
+    const input = page.locator('div[aria-label="Message"]').first();
+    await input.click();
+    await input.type(DM_MESSAGE, { delay: 50 + Math.random() * 50 });
+    await randomDelay(1000, 2000);
+
+    await page.keyboard.press('Enter');
+    await randomDelay(2000, 3000);
+
+    console.log(`DM sent to @${username}`);
+    return { success: true, username };
+  } catch (err) {
+    console.error(`Failed to DM @${username}:`, err.message);
+    return { success: false, error: err.message };
+  }
+}
 
     let messageBtn = null;
     for (const selector of selectors) {
