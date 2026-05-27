@@ -53,7 +53,7 @@ async function sendDM(username) {
     await page.goto(`https://www.instagram.com/${username}/`, { waitUntil: 'networkidle' });
     await randomDelay(2000, 4000);
 
-    const messageBtn = page.locator('div[role="button"]:has-text("Message")').first();
+    const messageBtn = page.locator('div[role="button"]:has-text("Message"), a[role="button"]:has-text("Message")').first();
     if (!await messageBtn.isVisible()) {
       return { success: false, error: 'No Message button found' };
     }
